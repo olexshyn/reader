@@ -17,12 +17,13 @@ jobs:
             - uses: actions/checkout@v4
             - uses: actions/setup-python@v4
               with:
-                python-version: "3.13"
-                cache: "pip"  #caches the pip dependencu of any installed packages
-            - name : Install dependencies
-              run: | #multiline string #Need : dependencie from requirenments.txt
-                python -m pip install --ugrade pip
+                python-version: "3.11"
+                cache: "pip"  
+                #caches the pip dependencu of any installed packages
+            - name: Install dependencies
+              run: |
+                python -m pip install --upgrade pip
                 python -m pip install ruff
-                python -m pip install -r requirements.txt
+                if [ -f requirements.txt ]; them python -m pip install -r requirements.txt; fi
             - name: Run Ruff
-              run: ruff check --output-format=github  #easier to understand
+              run: ruff check --output-format=github . #easier to understand
