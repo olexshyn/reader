@@ -32,7 +32,6 @@ jobs:
                 if [ -f requirements.txt ]; then python -m pip install -r requirements.txt; fi
             - name: Run Pytest
               run: pytest
-            - name: Fail on purpose
-              run: exit 1
+
 
 

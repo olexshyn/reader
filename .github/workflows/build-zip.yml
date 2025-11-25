@@ -1,0 +1,48 @@
+name : Build -backend zip artifact
+
+on: 
+    pull_request:
+        branches:
+            - github-actions-tutorial
+    push:
+        branches: 
+            - github-actions-tutorial
+    workflow_dispatch:
+
+jobs:
+    build-zip:
+        runs-on: ubuntu-latest
+        defaults:
+            run:
+                working-directory: backend
+        steps:
+            - name: Checkout reposotory
+              uses: actions/checkout@v4
+
+            - name: Set up Python
+              uses: actions/setup-python@v4
+              with:
+                python-version: "3.12"
+                cache: "pip"  
+            - name: Install dtools
+              run: |
+                python -m pip install --upgrade pip
+                sudo apt-get update && sudo apt-get install -y unzip || TRUE
+
+            - name: Clean Previous articfact
+              run: 
+                    rm -f ../backend-artifact.zip || true
+            - name: Create backend zip 
+              run: |
+                zip -r ../backend-artifact.zip . \
+                -x ".venv/*" "venv/*" "__pycache__/*" "migrations/*" "instance/*" \
+                "*.sqlite3" "app.db" ".git/*" "backend/dist/*"
+            - name: List created artifacts
+              run: ls -la ..
+
+            - name: Upload backend artifact
+              uses: actions/upload-artifact@v4
+              with:
+                name: backend-artifact
+                path: ../backend-artifact.zip
+                retention-days: 7
