@@ -20,7 +20,7 @@ jobs:
             - name: Set up Python
               uses: actions/setup-python@v4
               with:
-                python-version: "3.12"
+                python-version: "3.13"
                 cache: "pip"  
             - name: Install dependencies
               run: |
@@ -28,4 +28,4 @@ jobs:
                 python -m pip install ruff
                 if [ -f requirements.txt ]; then python -m pip install -r requirements.txt; fi
             - name: Run Ruff
-              run: ruff check --output-format=github . #easier to understand
+              run: ruff check --target-version=py313 --output-format=github . #easier to understand
