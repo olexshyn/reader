@@ -1,0 +1,38 @@
+name: Run Tests
+
+on:
+    pull_request:
+        branches:
+            - github-actions-tutorial
+    push:
+        branches:
+            - github-actions-tutorial
+    workflow_call:
+    workflow_dispatch:
+
+
+jobs:
+    testing:
+        runs-on: ubuntu-latest
+        strategy:
+            matrix:
+                python-version: ["3.9","3.10","3.11", "3.12","3.13"]
+       
+        steps:
+            - uses: actions/checkout@v4
+            - name: Set up Python ${{matrix.python-version}}
+              uses: actions/setup-python@v5
+              with:
+                python-version: ${{matrix.python-version}}
+                cache: "pip"
+            - name: Install dependencies
+              run: |
+                python -m pip install --upgrade pip
+                python -m pip install .[dev] ||true
+                if [ -f requirements.txt ]; then python -m pip install -r requirements.txt; fi
+            - name: Run Pytest
+              run: pytest
+            - name: Fail on purpose
+              run: exit 1
+
+
